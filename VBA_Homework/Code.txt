@@ -1,0 +1,113 @@
+Sub tickreader():
+'# is proposed challenge code, as to not break current version
+
+'define variables
+'# ws As Worksheet
+Dim ticker As String
+Dim volume As Double
+Dim oprice As Double
+Dim cprice As Double
+Dim ychange As Double
+Dim pchange As Double
+Dim startrow As Integer
+Dim endrow As Long
+Dim sumtablerow As Integer
+
+
+'set fixed values initial
+sumtablerow = 2
+sumtablecolumn = 1
+startrow = 2
+volume = 0
+
+
+'set worksheet loops
+
+
+'#For Each ws In ActiveWorkbook.Worksheets
+    '#ws.Activate
+
+    'Find my last row in goven ws
+    
+    LastRow = Cells(Rows.Count, 1).End(xlUp).Row
+    
+    'set oprice
+    oprice = Cells(2, 3).Value
+    
+    'mark the headings
+    
+        Cells(1, 9).Value = "Ticker"
+        Cells(1, 10).Value = "Yearly Change"
+        Cells(1, 11).Value = "Percent Change"
+        Cells(1, 12).Value = "Total Stock Volume"
+        
+    'open for loops
+        For i = 2 To LastRow
+        
+        'Check for the ticker value, if not same then
+        
+            If Cells(i + 1, 1).Value <> Cells(i, 1).Value Then
+                ticker = Cells(i, 1).Value
+                Cells(sumtablerow, 9).Value = ticker
+                
+            'set the closing price
+                cprice = Cells(i, 6).Value
+            'calculate yearly change
+                ychange = cprice - oprice
+                Cells(sumtablerow, 10).Value = ychange
+            'calculate percent change, dont forget the 0 errors
+                If oprice = 0 Then
+                    pchange = 0
+                  Else
+                    pchange = ychange / oprice
+                    Cells(sumtablerow, 11).Value = pchange
+                    Cells(sumtablerow, 11).NumberFormat = "0.00%"
+                End If
+                
+                'calculate volume
+                volume = volume + Cells(i, 7).Value
+                    Cells(sumtablerow, 12).Value = volume
+                    
+                'reset opening price
+                 oprice = Cells(i + 1, 3).Value
+                 'reset volume
+                 volume = 0
+                 'add one to summary table
+                 sumtablerow = sumtablerow + 1
+            'finish if statement with adding volume b/c same
+            Else
+             volume = volume + Cells(i, 7).Value
+            End If
+            Next i
+            
+      'count number of tickers in sumtable
+  MsgBox (sumtablerow)
+   
+   YCLastRow = Cells(Rows.Count, 9).End(xlUp).Row
+   MsgBox (YCLastRow)
+   
+   For j = 2 To YCLastRow
+    If (Cells(j, 10).Value) > 0 Then
+        Cells(j, 10).Interior.ColorIndex = 4
+    ElseIf (Cells(j, 10).Value) = 0 Then
+        Cells(j, 10).Interior.ColorIndex = 6
+    ElseIf (Cells(j, 10).Value) < 0 Then
+        Cells(j, 10).Interior.ColorIndex = 3
+        
+    End If
+    Next j
+    
+    
+              
+    
+
+
+
+
+
+'#Next ws
+
+End Sub
+
+
+
